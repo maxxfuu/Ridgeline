@@ -1,5 +1,5 @@
 import torch 
-import measurement.timing as timing
+import ridgeline.measurement.timing as timing
 
 def compute_roof(N: int, device: str) -> float:
   # pre-allocate tensors 
