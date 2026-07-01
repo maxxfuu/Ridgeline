@@ -27,5 +27,20 @@ fp16 NxN, 2 * N**2 bytes per matrix
 total = 3 * (2 * N**2) = 6 * N**2 bytes
 
 Suppose N = 8192
-total = ~100MB 
+total = ~400MB
 """
+
+
+def main():
+  device, N_List = "mps", [2048, 4096, 6144, 8192]
+  results = list()
+
+  for N in N_List:
+    achieved = compute_roof(N, device)
+    results.append((N, achieved))
+
+  return results
+
+
+if __name__ == "__main__":
+  main()
