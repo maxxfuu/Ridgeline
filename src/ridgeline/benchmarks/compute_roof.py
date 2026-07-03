@@ -13,7 +13,7 @@ def compute_roof(N: int, device: str) -> float:
 
   print(f"FLOPs: {2 * N**3}")
   print(f"median time: {median_time} seconds")
-  print(f"FLOPs/time: {2 * N**3 / median_time} FLOPs/second") 
+  print(f"FLOPs/time: {(2 * N**3 / median_time).round(2)} FLOPs/second \n") 
 
   return (2 * N**3) / median_time  
 
