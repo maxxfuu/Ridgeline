@@ -1,7 +1,7 @@
 import torch 
 import ridgeline.measurement.timing as timing
 
-def compute_memory(N: int, device: str) -> float:
+def memory_roof(N: int, device: str) -> float:
   # pre-allocate tensors 
   x = torch.randn(N, dtype=torch.float32, device=device)
   y = torch.empty(N, dtype=torch.float32, device=device)
@@ -21,7 +21,7 @@ def main():
   results = list()
 
   for N in N_List:
-    achieved = compute_memory(N, device)
+    achieved = memory_roof(N, device)
     results.append((N, achieved))
 
   return results
