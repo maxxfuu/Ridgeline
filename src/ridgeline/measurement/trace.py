@@ -3,7 +3,6 @@ from time import perf_counter
 from typing import Callable
 from .sync import sync
 
-
 def peak_memory(op: Callable, device: str) -> int:
   """Bytes of memory footprint used by one call to op(). Not bandwidth."""
   if device == "mps":
@@ -26,14 +25,6 @@ def peak_memory(op: Callable, device: str) -> int:
 
 
 def trace_ops(model: torch.nn.Module, op: Callable, device: str) -> dict:
-  """Per-module wall-clock time inside one call to op(). Returns {module_name: seconds}.
-
-  Hooks every nn.Module (leaves and containers), so a parent's time includes
-  its children's — e.g. MultiHeadAttention's entry includes W_Q/W_K/W_V/out_proj.
-  Only captures module __call__ boundaries: inline tensor ops written directly
-  in a forward() (e.g. the Q @ K^T matmul in MultiHeadAttention.forward) are not
-  their own entries, they're folded into the enclosing module's time.
-  """
   timings = {}
   starts = {}
   handles = []

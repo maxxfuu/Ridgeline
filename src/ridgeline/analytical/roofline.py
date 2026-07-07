@@ -1,19 +1,3 @@
-"""Roofline calculator.
-
-Ties the analytical layer (predicted FLOPs/bytes from flop_byte_model) to the
-measurement layer (device ceilings from benchmarks/compute_roof.py and
-benchmarks/memory_roof.py) to answer, per operation: compute-bound or
-memory-bound, and how close to the ceiling it runs.
-
-Units convention (keep everything raw inside the math, convert only for display):
-  - flops:          FLOPs (count)
-  - byte counts:    bytes
-  - peak_flops:     FLOPs / second   (from compute_roof)
-  - peak_bandwidth: bytes / second   (from memory_roof)
-  - intensity:      FLOPs / byte
-Sanity check: peak_bandwidth * intensity = (bytes/s) * (FLOPs/byte) = FLOPs/s.
-"""
-
 import matplotlib.pyplot as plt
 
 def arithmetic_intensity(flops: int, byte_count: int) -> float:
@@ -22,29 +6,17 @@ def arithmetic_intensity(flops: int, byte_count: int) -> float:
 
 
 def ridge_point(peak_flops: float, peak_bandwidth: float) -> float:
-    """The arithmetic intensity where the slanted (memory) roof meets the flat
-    (compute) roof: peak_flops / peak_bandwidth.
-
-    An op with intensity below this is memory-bound; above it, compute-bound.
-    """
-    raise NotImplementedError
+    # the arithmetic intensity where the slanted (memory) roof meets the flat
+    return peak_flops / peak_bandwidth
 
 
 def attainable_flops(intensity: float, peak_flops: float, peak_bandwidth: float) -> float:
-    """Height of the roof directly above a given intensity: the best FLOPs/s
-    achievable there = min(peak_flops, peak_bandwidth * intensity).
-
-    Below the ridge the memory term wins; above it the compute term does.
-    """
-    raise NotImplementedError
+    # Height of the roof directly above a given intensity: the best FLOPs/s
+    return min(peak_flops, peak_bandwidth * intensity)
 
 
 def classify(intensity: float, peak_flops: float, peak_bandwidth: float) -> str:
-    """Return "compute-bound" or "memory-bound" by comparing intensity against
-    the ridge point.
-    """
-    raise NotImplementedError
-
+    return "memory-bound" if intensity < ridge_point(peak_flops, peak_bandwidth) else "compute-bound"
 
 def plot_roofline(points, peak_flops: float, peak_bandwidth: float, ax=None):
     """Draw the roofline and scatter each measured op onto it. (Plumbing — done.)

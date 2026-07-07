@@ -3,9 +3,9 @@ from ridgeline.measurement.benchmark import benchmark
 
 def compute_roof(N: int, device: str) -> float:
   # pre-allocate tensors
-  a = torch.randn(N, N, dtype=torch.float16, device=device)
-  b = torch.randn(N, N, dtype=torch.float16, device=device)
-  c = torch.empty(N, N, dtype=torch.float16, device=device)
+  a = torch.randn(N, N, dtype=torch.float32, device=device)
+  b = torch.randn(N, N, dtype=torch.float32, device=device)
+  c = torch.empty(N, N, dtype=torch.float32, device=device)
 
   # only measure matmul compute time, not memory bandwidth
   make_op = lambda: torch.matmul(a, b, out=c)
