@@ -10,11 +10,9 @@ def linear_flops(batch: int, in_features: int, out_features: int) -> int:
     # M * N * (2*K)
     return batch * out_features * (2 * in_features)
 
-
 def linear_bytes(batch: int, in_features: int, out_features: int, dtype_bytes: int) -> int:
     # All of the cells converted to dtype_bytes 
     return dtype_bytes * ((batch * in_features) + (in_features * out_features) + (batch * out_features))
-
 
 def attention_flops(batch: int, query_len: int, ctx_len: int, d_model: int, n_heads: int) -> int:
     # 2 matmuls (Q@K^T, attn_weights@V), each 2 FLOPs/element (mult+add),
@@ -27,7 +25,6 @@ def attention_bytes(batch: int, query_len: int, ctx_len: int, d_model: int, n_he
     # n_heads unused here on purpose: once heads are combined, sizes only depend on d_model.
     return dtype_bytes * batch * d_model * (2 * ctx_len + 2 * query_len)
 
-  
 def predict_layer(cfg: dict, batch: int, query_len: int, ctx_len: int, dtype_bytes: int) -> dict:
     d_model = cfg["emb_dim"]
     n_heads = cfg["n_heads"]
@@ -49,7 +46,6 @@ def predict_layer(cfg: dict, batch: int, query_len: int, ctx_len: int, dtype_byt
         "flops": qkvo_flops + attn_flops + ffn_flops,
         "bytes": qkvo_bytes + attn_bytes + ffn_bytes,
     }
-
 
 def predict_model(cfg: dict, batch: int, query_len: int, ctx_len: int, dtype_bytes: int) -> dict:
     layer = predict_layer(cfg, batch, query_len, ctx_len, dtype_bytes)
