@@ -47,11 +47,14 @@ def plot_roofline(points, peak_flops: float, peak_bandwidth: float, ax=None):
     ax.text(ridge, peak_flops * 1.1, f"ridge\n{ridge:.1f} FLOP/byte",
             ha="center", va="bottom", fontsize=8, color="grey")
 
-    # each measured op as a dot, annotated with its label
+    # each measured op as a dot, annotated with its label and (x, y) coords.
+    # x = arithmetic intensity (FLOP/byte), y = achieved performance (GFLOP/s).
+    colors = {"prefill": "tab:blue", "decode": "tab:orange"}
     for label, intensity, achieved in points:
-        ax.scatter(intensity, achieved, zorder=3)
-        ax.annotate(label, (intensity, achieved),
-                    textcoords="offset points", xytext=(6, 6), fontsize=9)
+        ax.scatter(intensity, achieved, zorder=3, color=colors.get(label))
+        ax.annotate(f"{label}\n({intensity:.2f} FLOP/byte, {achieved / 1e9:.1f} GFLOP/s)",
+                    (intensity, achieved), textcoords="offset points",
+                    xytext=(8, 8), fontsize=8, color=colors.get(label))
 
     ax.set_xscale("log")
     ax.set_yscale("log")
